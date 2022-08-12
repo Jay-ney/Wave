@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -27,6 +28,7 @@
 #include <stdio.h>
 #include "JQ8X00.h"
 #include "delay.h"
+#include "openmv_uart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -142,19 +144,21 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART1_UART_Init();
   MX_TIM5_Init();
   MX_TIM1_Init();
   MX_USART2_UART_Init();
-
+  MX_UART5_Init();
   /* USER CODE BEGIN 2 */
   JQ8x00_Init();
   HAL_TIM_Base_Start(&htim5);
   HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_1);
+  openmvUartInit();
 
-    JQ8x00_Command_Data(SetVolume,30);         //设置音量为30
-    HAL_Delay(10);
-    /* USER CODE END 2 */
+  JQ8x00_Command_Data(SetVolume,30);         //设置音量为30
+  HAL_Delay(10);
+  /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
