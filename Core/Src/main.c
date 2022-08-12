@@ -54,6 +54,8 @@ uint32_t valueDown = 0;
 uint16_t width = 0;
 uint16_t dist = 0;
 uint8_t test = 10;
+uint16_t sound_count = 0;
+uint16_t sound_flag = 1;
 
 /* USER CODE END PV */
 
@@ -112,7 +114,27 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
     }
 }
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 
+    if (htim == &htim2){
+        sound_count++;
+        if (dist < 30){
+            if(sound_flag){
+                HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+                JQ8x00_Command_Data(AppointTrack ,2);
+                sound_flag=0;
+            }
+            else{
+                HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
+            }
+            if(sound_count > 5){
+                sound_count = 0;
+                sound_flag = 1;
+            }
+        }
+
+    }
+}
 
 /* USER CODE END 0 */
 
@@ -150,10 +172,13 @@ int main(void)
   MX_TIM1_Init();
   MX_USART2_UART_Init();
   MX_UART5_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   JQ8x00_Init();
   HAL_TIM_Base_Start(&htim5);
   HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_1);
+  __HAL_TIM_CLEAR_IT(&htim2,TIM_IT_UPDATE ); //清除IT标志位
+  HAL_TIM_Base_Start_IT(&htim2);
   openmvUartInit();
 
   JQ8x00_Command_Data(SetVolume,30);         //设置音量为30
@@ -165,15 +190,17 @@ int main(void)
 
   while (1)
   {
-      printf("distance is %d cm\r\n", SRO4_Read());
-      if (dist < 26){
-          HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-          JQ8x00_Command_Data(AppointTrack ,2);
-      }
-      else{
-          HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
-      }
-      HAL_Delay(10);
+      dist = SRO4_Read();
+      HAL_Delay(100);
+//      printf("distance is %d cm\r\n", SRO4_Read());
+//      if (dist < 26){
+//          HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+//          JQ8x00_Command_Data(AppointTrack ,2);
+//      }
+//      else{
+//          HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
+//      }
+//      HAL_Delay(10);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
