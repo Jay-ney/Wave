@@ -29,6 +29,7 @@
 #include "JQ8X00.h"
 #include "delay.h"
 #include "openmv_uart.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -68,11 +69,7 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-int print_func(int ch, FILE *f)
-{
-    HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, 100);
-    return ch;
-}
+
 
 void delay_us(uint32_t time){
     __HAL_TIM_SET_COUNTER(&htim5,0);
@@ -80,11 +77,11 @@ void delay_us(uint32_t time){
 }
 
 uint16_t SRO4_Read(void){
-    HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(TRIG1_GPIO_Port, TRIG1_Pin, GPIO_PIN_RESET);
     delay_us(2);
-    HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(TRIG1_GPIO_Port, TRIG1_Pin, GPIO_PIN_SET);
     delay_us(12);
-    HAL_GPIO_WritePin(TRIG_GPIO_Port, TRIG_Pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(TRIG1_GPIO_Port, TRIG1_Pin, GPIO_PIN_RESET);
     __HAL_TIM_ENABLE_IT(&htim5, TIM_IT_CC1);
     HAL_Delay(100);
     return dist;
@@ -115,23 +112,49 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-
+    sound_count++;
     if (htim == &htim2){
-        sound_count++;
-        if (dist < 30){
+        if (dist < 30) {
+            HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+//            JQ8x00_Command_Data(AppointTrack ,9);
             if(sound_flag){
-                HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-                JQ8x00_Command_Data(AppointTrack ,2);
-                sound_flag=0;
+//              JQ8x00_Command_Data(AppointTrack ,9);
+//              sound_flag=0;
+                if (traffic_light == GREEN_){
+                    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+                    JQ8x00_Command_Data(AppointTrack ,2);
+                    sound_flag=0;
+                }
+                else if(traffic_light == RED_){
+                    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+                    JQ8x00_Command_Data(AppointTrack ,1);
+                    sound_flag=0;
+                    Motor_Down(1);
+//                    MOTOR_DIR_POS;
+//                    //MOTOR_DIR_NEG;
+//                    Set_Speed_RPM(10);
+//                    HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
+//                    while(dist < 10)
+//                    {
+//                        HAL_TIM_PWM_Stop_IT(&htim1,TIM_CHANNEL_1);
+//                    }
+//                    HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
+                }
+                else if(traffic_light == YELLOW_){
+                    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+                    JQ8x00_Command_Data(AppointTrack ,3);
+                    sound_flag=0;
+                }
             }
+        }
             else{
                 HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
             }
-            if(sound_count > 5){
+            if(sound_count > 30){
                 sound_count = 0;
                 sound_flag = 1;
             }
-        }
+
 
     }
 }
@@ -170,18 +193,23 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM5_Init();
   MX_TIM1_Init();
-  MX_USART2_UART_Init();
   MX_UART5_Init();
   MX_TIM2_Init();
+  MX_TIM4_Init();
+  MX_UART4_Init();
   /* USER CODE BEGIN 2 */
+    HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
+
   JQ8x00_Init();
   HAL_TIM_Base_Start(&htim5);
   HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_1);
   __HAL_TIM_CLEAR_IT(&htim2,TIM_IT_UPDATE ); //清除IT标志位
   HAL_TIM_Base_Start_IT(&htim2);
+  __HAL_TIM_CLEAR_IT(&htim4,TIM_IT_UPDATE ); //清除IT标志位
+  HAL_TIM_Base_Start_IT(&htim4);
   openmvUartInit();
 
-  JQ8x00_Command_Data(SetVolume,30);         //设置音量为30
+  JQ8x00_Command_Data(SetVolume,20);         //设置音量为30
   HAL_Delay(10);
   /* USER CODE END 2 */
 
@@ -191,7 +219,7 @@ int main(void)
   while (1)
   {
       dist = SRO4_Read();
-      HAL_Delay(100);
+//      HAL_Delay(100);
 //      printf("distance is %d cm\r\n", SRO4_Read());
 //      if (dist < 26){
 //          HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
