@@ -75,6 +75,10 @@ void Error_Handler(void);
 #define link_sound_rx_GPIO_Port GPIOA
 #define link_sound_tx_Pin GPIO_PIN_10
 #define link_sound_tx_GPIO_Port GPIOA
+#define OPENMV_LOW_Pin GPIO_PIN_8
+#define OPENMV_LOW_GPIO_Port GPIOB
+#define OPENMV_HIGH_Pin GPIO_PIN_9
+#define OPENMV_HIGH_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

@@ -197,6 +197,7 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM4_Init();
   MX_UART4_Init();
+  MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
     HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
 

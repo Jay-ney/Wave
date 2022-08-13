@@ -38,3 +38,14 @@ HAL_StatusTypeDef openmvUartStop(void){
   __HAL_UART_DISABLE_IT(&OPENMV_UART_HANDLE, UART_IT_IDLE);
   return HAL_UART_DMAStop(&OPENMV_UART_HANDLE);
 }
+
+void updateFormGPIO(void){
+  uint8_t low = HAL_GPIO_ReadPin(OPENMV_LOW_GPIO_Port, OPENMV_LOW_Pin);
+  uint8_t high = HAL_GPIO_ReadPin(OPENMV_HIGH_GPIO_Port, OPENMV_HIGH_Pin);
+  uint8_t sum = low + high*2;
+  if (sum>YELLOW_){
+    traffic_light = NOT_AVAILABLE_;
+  } else {
+    traffic_light = sum;
+  }
+}
