@@ -199,7 +199,8 @@ void  JQ8x00_Command_Data(UartCommandData Command,uint8_t DATA)
 #if JQ8x00_BusyCheck
     while(JQ8x00_BUSY_Read);				//Ã¦¼ì²â
 #endif
-    JQ8x00_UART(Buffer,DataLen);
+//    JQ8x00_UART(Buffer,DataLen);
+    HAL_UART_Transmit(&huart1,Buffer,DataLen,100);
 }
 
 /************************************************************************

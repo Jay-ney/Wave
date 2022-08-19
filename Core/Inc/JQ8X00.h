@@ -14,7 +14,7 @@
 #define JQ8x00_us(us)    delay_us(us)
 
 //串口函数重定义
-#define JQ8x00_UART(pointer,len) HAL_UART_Transmit(&huart1,pointer,len,0xffff)        //pointer为指针数据传入数据首地址，len为要发送数据个数
+#define JQ8x00_UART(pointer,len) HAL_UART_Transmit(&huart1,pointer,len,100)        //pointer为指针数据传入数据首地址，len为要发送数据个数
 
 //组合播放最大容量,不要设置过大以免堆栈溢出
 #define ZH_MAX	50

@@ -58,6 +58,7 @@ uint8_t test = 10;
 uint8_t RED = 1;
 uint8_t GREEN = 1;
 uint8_t YELLOW = 1;
+extern uint16_t angle;
 //extern uint8_t YELLOW = 1;
 
 /* USER CODE END PV */
@@ -116,80 +117,6 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim){
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
     if (htim == &htim2){
         General_Function(dist);
-//        if (traffic_light == RED_ && RED == 1){
-//           // __HAL_TIM_ENABLE_IT(&htim1,0);
-//            RED = 1; GREEN = 0;
-//            Motor_Down(1);
-//            HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
-//            if (dist < 30){
-//                HAL_TIM_PWM_Stop_IT(&htim1,TIM_CHANNEL_1);
-//                HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-//            }
-//            else{
-//                HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
-//                HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
-//            }
-////            if (&htim1 == Set_Speed_RPM){
-////                RED = 0;GREEN = 1;
-////            }
-////            HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
-//            JQ8x00_Command_Data(AppointTrack ,1);
-//            HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_SET);
-//        }
-//        else if (traffic_light == GREEN_){
-//            Motor_Down(0);
-//            JQ8x00_Command_Data(AppointTrack ,2);
-//            HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_RESET);
-//            HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
-//        }
-//        else if(traffic_light == YELLOW_){
-//            HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
-//            HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_SET);
-//        }
-//        General_Function(dist);
-//            if (traffic_light == GREEN_){
-//                HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-//                HAL_GPIO_WritePin(GPIOF, GPIO_PIN_8, GPIO_PIN_SET);
-//                JQ8x00_Command_Data(AppointTrack ,2);
-//            }
-//            HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-//            JQ8x00_Command_Data(AppointTrack ,9);
-//            if(sound_flag){
-////              JQ8x00_Command_Data(AppointTrack ,9);
-////              sound_flag=0;
-//                if (traffic_light == GREEN_){
-//                    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-//                    JQ8x00_Command_Data(AppointTrack ,2);
-//                    sound_flag=0;
-//                }
-//                else if(traffic_light == RED_){
-//                    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-//                    JQ8x00_Command_Data(AppointTrack ,1);
-//                    sound_flag=0;
-//                    Motor_Down(1);
-////                    MOTOR_DIR_POS;
-////                    //MOTOR_DIR_NEG;
-////                    Set_Speed_RPM(10);
-////                    HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
-////                    while(dist < 10)
-////                    {
-////                        HAL_TIM_PWM_Stop_IT(&htim1,TIM_CHANNEL_1);
-////                    }
-////                    HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
-//                }
-//                else if(traffic_light == YELLOW_){
-//                    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
-//                    JQ8x00_Command_Data(AppointTrack ,3);
-//                    sound_flag=0;
-//                }
-//            }
-
-//            if(sound_count > 30){
-//                sound_count = 0;
-//                sound_flag = 1;
-//            }
-
-
     }
 }
 
@@ -233,10 +160,10 @@ int main(void)
   MX_UART4_Init();
   MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
-    HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
+    //HAL_TIM_PWM_Start_IT(&htim1,TIM_CHANNEL_1);
     __HAL_TIM_CLEAR_IT(&htim1,TIM_IT_UPDATE ); //清除IT标志位
-    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, SET);
-    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, SET);
+    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOF, GPIO_PIN_10, GPIO_PIN_SET);
   JQ8x00_Init();
   HAL_TIM_Base_Start(&htim5);
   HAL_TIM_IC_Start_IT(&htim5, TIM_CHANNEL_1);
@@ -246,7 +173,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim4);
   openmvUartInit();
     HAL_TIM_Base_Start_IT(&htim14);
-
+    MotorStop();
+    Set_Speed_RPM(6);
   JQ8x00_Command_Data(SetVolume,30);         //设置音量为30
   HAL_Delay(10);
   /* USER CODE END 2 */
@@ -295,9 +223,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 336;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 168;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -310,10 +238,10 @@ void SystemClock_Config(void)
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
   {
     Error_Handler();
   }

@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "tim.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -54,6 +55,8 @@ void updateFromGPIO(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint16_t Count = 0;
+int16_t angle = 0;
+
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -230,11 +233,16 @@ void TIM1_CC_IRQHandler(void)
   /* USER CODE END TIM1_CC_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_CC_IRQn 1 */
-    Count++;
-    while(Count == 1601)
-    {
-        Count = 0;
-        HAL_TIM_PWM_Stop_IT(&htim1,TIM_CHANNEL_1);
+   // Count++;
+    if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_0) == GPIO_PIN_RESET){
+        angle++;
+    }
+    else{
+        angle--;
+    }
+
+    if((angle < 0) || (angle >= 1590)){
+        MotorStop();
     }
   /* USER CODE END TIM1_CC_IRQn 1 */
 }
