@@ -48,7 +48,7 @@
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
 void userUartCallback(UART_HandleTypeDef* huart);
-void updateFormGPIO(void);
+void updateFromGPIO(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -231,7 +231,7 @@ void TIM1_CC_IRQHandler(void)
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_CC_IRQn 1 */
     Count++;
-    while(Count == 1600)
+    while(Count == 1601)
     {
         Count = 0;
         HAL_TIM_PWM_Stop_IT(&htim1,TIM_CHANNEL_1);
@@ -277,7 +277,7 @@ void TIM8_TRG_COM_TIM14_IRQHandler(void)
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 0 */
   HAL_TIM_IRQHandler(&htim14);
   /* USER CODE BEGIN TIM8_TRG_COM_TIM14_IRQn 1 */
-  updateFormGPIO();
+  updateFromGPIO();
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 1 */
 }
 

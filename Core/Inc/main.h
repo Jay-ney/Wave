@@ -61,23 +61,25 @@ void Error_Handler(void);
 #define BEEP_GPIO_Port GPIOF
 #define LED0_Pin GPIO_PIN_9
 #define LED0_GPIO_Port GPIOF
+#define LED1_Pin GPIO_PIN_10
+#define LED1_GPIO_Port GPIOF
+#define DIR__Pin GPIO_PIN_0
+#define DIR__GPIO_Port GPIOC
 #define ECHO1_Pin GPIO_PIN_0
 #define ECHO1_GPIO_Port GPIOA
-#define DIR__Pin GPIO_PIN_1
-#define DIR__GPIO_Port GPIOA
 #define EN__Pin GPIO_PIN_4
 #define EN__GPIO_Port GPIOA
 #define TRIG1_Pin GPIO_PIN_5
 #define TRIG1_GPIO_Port GPIOA
-#define PUL__Pin GPIO_PIN_9
-#define PUL__GPIO_Port GPIOE
+#define PUL__Pin GPIO_PIN_8
+#define PUL__GPIO_Port GPIOA
 #define link_sound_rx_Pin GPIO_PIN_9
 #define link_sound_rx_GPIO_Port GPIOA
 #define link_sound_tx_Pin GPIO_PIN_10
 #define link_sound_tx_GPIO_Port GPIOA
-#define OPENMV_LOW_Pin GPIO_PIN_8
+#define OPENMV_LOW_Pin GPIO_PIN_6
 #define OPENMV_LOW_GPIO_Port GPIOB
-#define OPENMV_HIGH_Pin GPIO_PIN_9
+#define OPENMV_HIGH_Pin GPIO_PIN_7
 #define OPENMV_HIGH_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 

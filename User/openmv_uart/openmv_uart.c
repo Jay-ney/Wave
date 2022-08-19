@@ -39,13 +39,19 @@ HAL_StatusTypeDef openmvUartStop(void){
   return HAL_UART_DMAStop(&OPENMV_UART_HANDLE);
 }
 
-void updateFormGPIO(void){
+void updateFromGPIO(void){
   uint8_t low = HAL_GPIO_ReadPin(OPENMV_LOW_GPIO_Port, OPENMV_LOW_Pin);
   uint8_t high = HAL_GPIO_ReadPin(OPENMV_HIGH_GPIO_Port, OPENMV_HIGH_Pin);
-  uint8_t sum = low + high*2;
-  if (sum>YELLOW_){
-    traffic_light = NOT_AVAILABLE_;
-  } else {
-    traffic_light = sum;
+  if(low==GPIO_PIN_RESET && high==GPIO_PIN_RESET){
+      traffic_light = NOT_AVAILABLE_;
+  }
+  else if(low==GPIO_PIN_SET && high==GPIO_PIN_RESET){
+      traffic_light = RED_;
+  }
+  else if(low==GPIO_PIN_RESET && high==GPIO_PIN_SET){
+      traffic_light = GREEN_;
+  }
+  else if(low==GPIO_PIN_SET && high==GPIO_PIN_SET){
+      traffic_light = YELLOW_;
   }
 }

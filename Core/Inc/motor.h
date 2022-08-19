@@ -7,10 +7,11 @@
 
 #include "main.h"
 
-#define MOTOR_DIR_POS HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_RESET)
-#define MOTOR_DIR_NEG HAL_GPIO_WritePin(GPIOA,GPIO_PIN_1,GPIO_PIN_SET)
+#define MOTOR_DIR_POS HAL_GPIO_WritePin(GPIOC,GPIO_PIN_0,RESET)
+#define MOTOR_DIR_NEG HAL_GPIO_WritePin(GPIOC,GPIO_PIN_0,SET)
 
-void Set_Speed_RPM(unsigned int speed);
+unsigned int Set_Speed_RPM(unsigned int speed);
 void Motor_Down(uint8_t DIR);
+void General_Function(uint16_t distance);
 
 #endif //WAVE_MOTOR_H
