@@ -16,5 +16,6 @@ void General_Function(uint16_t distance);
 void MotorPos(void);
 void MotorNeg(void);
 void MotorStop(void);
+void motorInit(void);
 
 #endif //WAVE_MOTOR_H

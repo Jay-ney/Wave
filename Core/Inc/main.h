@@ -71,6 +71,8 @@ void Error_Handler(void);
 #define EN__GPIO_Port GPIOA
 #define TRIG1_Pin GPIO_PIN_5
 #define TRIG1_GPIO_Port GPIOA
+#define KEY_Pin GPIO_PIN_7
+#define KEY_GPIO_Port GPIOA
 #define PUL__Pin GPIO_PIN_8
 #define PUL__GPIO_Port GPIOA
 #define link_sound_rx_Pin GPIO_PIN_9

@@ -58,6 +58,7 @@ uint8_t test = 10;
 uint8_t RED = 1;
 uint8_t GREEN = 1;
 uint8_t YELLOW = 1;
+uint8_t STOP = 1;
 extern uint16_t angle;
 //extern uint8_t YELLOW = 1;
 
@@ -172,11 +173,10 @@ int main(void)
   __HAL_TIM_CLEAR_IT(&htim4,TIM_IT_UPDATE ); //清除IT标志位
   HAL_TIM_Base_Start_IT(&htim4);
   openmvUartInit();
-    HAL_TIM_Base_Start_IT(&htim14);
-    MotorStop();
-    Set_Speed_RPM(6);
+  HAL_TIM_Base_Start_IT(&htim14);
+  MotorStop();
   JQ8x00_Command_Data(SetVolume,30);         //设置音量为30
-  HAL_Delay(10);
+  motorInit();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -185,6 +185,7 @@ int main(void)
   while (1)
   {
       dist = SRO4_Read();
+      motorInit();
 //      HAL_Delay(100);
 //      printf("distance is %d cm\r\n", SRO4_Read());
 //      if (dist < 26){

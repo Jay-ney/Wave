@@ -241,7 +241,7 @@ void TIM1_CC_IRQHandler(void)
         angle--;
     }
 
-    if((angle < 0) || (angle >= 1590)){
+    if((angle < 0) || (angle >= 1600)){
         MotorStop();
     }
   /* USER CODE END TIM1_CC_IRQn 1 */
